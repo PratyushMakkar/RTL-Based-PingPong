@@ -1,0 +1,10 @@
+src/graphics/CMakeFiles
+/*/*/*.cmake
+src/graphics/RTLPingPong
+src/graphics/*.out
+src/graphics/CMakeCache.txt
+src/graphics/drawables/CMakeFiles/
+src/graphics/Makefile
+src/graphics/drawables/*.cmake
+src/graphics/drawables/Makefile
+src/graphics/Makefile

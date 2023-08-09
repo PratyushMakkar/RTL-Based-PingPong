@@ -6,13 +6,39 @@
 #include "drawables/playerScore.h"
 #include "ball.h"
 #include <gameState.h>
+#include <VPingPong.h>
 
 GameState_t state = {};
 
 int _SCREEN_WIDTH{700};
 int _SCREEN_HEIGHT{400};
 
+static inline uint32_t CastUint32_t(uint16_t one, uint16_t two) {
+  uint32_t dimensions = ((uint32_t) one << 16) | ((uint32_t) two);
+  return dimensions;
+}
+void GetScore(VPingPong &pong) {
+  pong.rst = 1;
+
+  pong.dimensions = CastUint32_t((uint16_t) _SCREEN_WIDTH, (uint16_t) _SCREEN_HEIGHT);
+  pong.ballPosition = (uint32_t) pong.dimensions/2;
+  pong.ballVelocity = 2;
+
+  pong.leftPaddlePosition = CastUint32_t(state.leftPaddlePosition.first, state.leftPaddlePosition.second);
+  pong.rightPaddlePosition = CastUint32_t(state.rightPaddlePosition.first, state.rightPaddlePosition.second);
+
+  pong.eval();
+  pong.clk ^=1;
+  pong.eval();
+  pong.clk ^= 1;
+  pong.eval();
+
+  std::cout << pong.ballPosition << std::endl;
+}
+
 int main(int agrc, char** argv) {
+  VPingPong pong{};
+  
   SDL_Window* window = nullptr;
   SDL_Renderer* render = nullptr;
   SDL_Surface* window_surface = nullptr;
@@ -34,6 +60,7 @@ int main(int agrc, char** argv) {
   bool quit = false;
   
   while (!quit) {
+    GetScore(pong);
     if (SDL_PollEvent(&event)) {
       app.prepareScene();
       PlayerScore.UpdateScore(PADDLE_TYPE::RIGHT);

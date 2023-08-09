@@ -17,7 +17,7 @@ module PingPong (
 );
 
   logic [1:0] player_score_update_reg;
-  logic [15:0] player_score_reg;
+  logic [15:0] player_score_reg = 0;
 
   PaddleAlgorithm automatedPaddle(
     .clk(clk),

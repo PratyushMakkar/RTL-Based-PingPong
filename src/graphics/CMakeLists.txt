@@ -15,9 +15,17 @@ add_executable(RTLPingPong main.cpp)
 
 set_property(TARGET RTLPingPong PROPERTY CXX_STANDARD 11)
 
+#Add Verilator to cmake
+target_include_directories(RTLPingPong PUBLIC
+  "/opt/local/share/verilator/include" REQUIRED
+)
+
 target_sources(RTLPingPong PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/defs.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/gameState.cpp
+  "/opt/local/share/verilator/include/verilated.cpp"
+  "/opt/local/share/verilator/include/verilated_vcd_c.cpp"
+  "/opt/local/share/verilator/include/verilated_threads.cpp"
 )
 
 target_include_directories(RTLPingPong PUBLIC
@@ -29,3 +37,4 @@ target_link_libraries(RTLPingPong PUBLIC
 )
 
 add_subdirectory(drawables)
+add_subdirectory(obj_dir)

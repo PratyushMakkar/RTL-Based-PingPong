@@ -13,9 +13,9 @@ PlayerScore::PlayerScore(SDL_Renderer* render) {
 void PlayerScore::UpdateScore(PADDLE_TYPE type) {
   switch(type) {
     case (PADDLE_TYPE::LEFT):
-      ++_score.first;
+      _score.first = state.score.first;
     case (PADDLE_TYPE::RIGHT):
-      ++_score.second;
+       _score.second = state.score.second;
   }
   //After updating the score, render the new score 
   this->Draw();

@@ -8,7 +8,7 @@ module BallPhysics (
   input logic [31:0] rightPaddlePosition,
   output logic [1:0] playerDidScore,     // RL
   output logic [31:0] ballPositionOut,
-  output logic [31:0] ballVelocityOut,
+  output logic [31:0] ballVelocityOut
 );
 
   localparam PADDLE_HEIGHT = 16'h0064;
@@ -16,19 +16,15 @@ module BallPhysics (
 
   logic [31:0] ball_vel_reg;
   logic [31:0] ball_pos_reg;
-  logic [2:0] player_score_reg;
-
-  always_ff @(negedge rst) begin
-    
-  end
+  logic [1:0] player_score_reg;
 
   always_ff @(posedge clk) begin
     if (rst == 1'b0) begin
-     	 ball_vel_reg[31:16] <= INITIAL_BALL_VELOCITY;
+     	ball_vel_reg[31:16] <= INITIAL_BALL_VELOCITY;
     	ball_vel_reg[15:0] <= INITIAL_BALL_VELOCITY;
 
     	ball_pos_reg[31:16] <= {1'b0, dimensions[31:17]};
-    	ball_pos_reg[15:0] <= {1'b0, dimensions[16:1]};
+    	ball_pos_reg[15:0] <= {1'b0, dimensions[15:1]};
 
     	player_score_reg <= 2'b00;
     end else if (ball_pos_reg[15:0] >= dimensions[15:0] ||  ball_pos_reg[15:0] <= 16'h001F) begin
@@ -51,8 +47,8 @@ module BallPhysics (
       end
     end 
 
-    ball_pos_reg[31:16] = ball_pos_reg[31:16] + ball_vel_reg[31:16];
-    ball_pos_reg[15:0] = ball_pos_reg[15:0] + ball_vel_reg[15:0];
+    ball_pos_reg[31:16] <= ball_pos_reg[31:16] + ball_vel_reg[31:16];
+    ball_pos_reg[15:0] <= ball_pos_reg[15:0] + ball_vel_reg[15:0];
   end
 
   assign playerDidScore = player_score_reg;

@@ -19,7 +19,7 @@ module PaddleAlgorithm (
   always_ff @(posedge clk) begin 
     if (rst == 1'b0) begin
       paddlePositionOut <= {paddlePositionIn[31:16], paddle_base};
-    end else if ((paddlePositionIn[15:0] + HALF_PADDLE_HEIGHT) < ballPosition) begin
+    end else if ((paddlePositionIn[15:0] + HALF_PADDLE_HEIGHT) < ballPosition[15:0]) begin
       paddlePositionOut[15:0] <= paddlePositionIn[15:0] + 16'h0005;
     end else begin
       paddlePositionOut[15:0] <= paddlePositionIn[15:0] + 16'hFFFB; 

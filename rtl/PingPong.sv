@@ -5,11 +5,11 @@ module PingPong (
   input logic clk,
   input logic [31:0] dimensions,
   input logic [31:0] ballPosition,
-  input logic [15:0] ballVelocity,
+  input logic [31:0] ballVelocity,
   input logic [31:0] leftPaddlePosition,
   input logic [31:0] rightPaddlePosition,
 
-  output logic [1:0] scoreOut,
+  output logic [15:0] scoreOut,
   output logic [31:0] leftPaddlePositionOut,
   output logic [31:0] rightPaddlePositionOut,
   output logic [31:0] ballPositionOut,
@@ -19,17 +19,16 @@ module PingPong (
   logic [1:0] player_score_update_reg;
   logic [15:0] player_score_reg;
 
-  automatedPaddle PaddleAlgorithm (
+  PaddleAlgorithm automatedPaddle(
     .clk(clk),
     .rst(rst),
     .ballPosition(ballPosition),
     .dimensions(dimensions),
-    .ballVelocity(ballVelocity),
     .paddlePositionIn(leftPaddlePosition),
-    .paddlePositionOut(leftPaddlePosition),
+    .paddlePositionOut(leftPaddlePositionOut)
   );
 
-  ballPixel BallPhysics (
+  BallPhysics ballPixel (
     .rst(rst),
     .clk(clk),
     .dimensions(dimensions),
@@ -37,13 +36,13 @@ module PingPong (
     .ballVelocity(ballVelocity),
     .leftPaddlePosition(leftPaddlePosition),
     .rightPaddlePosition(rightPaddlePosition),
-    .playerDidScore(player_score_update_reg)                    // RL
-    .ballPositionOut(ballPosition),
-    .ballVelocityOut(ballVelocity),
+    .playerDidScore(player_score_update_reg),                   // RL
+    .ballPositionOut(ballPositionOut),
+    .ballVelocityOut(ballVelocityOut)
   );
 
   always_ff @(posedge clk) begin
-    if (player_score_reg != 2'b00) begin
+    if (player_score_update_reg != 2'b00) begin
       if (player_score_update_reg[1]) begin
         player_score_reg[15:8] <= player_score_reg[15:8] + 8'h01;
       end else begin

@@ -8,6 +8,7 @@
 
 typedef struct {
   bool IsResumed;
+  std::pair<uint8_t, uint8_t> score;
   std::pair<uint16_t, uint16_t> dimensions;
   std::pair<uint16_t, uint16_t> ballPosition;
   std::pair<uint16_t, uint16_t> ballVelocity;

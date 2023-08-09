@@ -8,3 +8,5 @@ src/graphics/Makefile
 src/graphics/drawables/*.cmake
 src/graphics/drawables/Makefile
 src/graphics/Makefile
+rtl/obj_dir
+.vscode

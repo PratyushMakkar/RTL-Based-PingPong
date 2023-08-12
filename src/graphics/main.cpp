@@ -7,8 +7,9 @@
 #include "ball.h"
 #include <gameState.h>
 #include <VPingPong.h>
-
+#include<renderThreds.h>
 #include <thread>
+#include <pthread.h>
 #include <chrono>
 
 int _SCREEN_WIDTH{700};
@@ -19,17 +20,6 @@ VPingPong pong{};
 static void InitializePong(VPingPong &pong);
 static void ComputeState(VPingPong &pong);
 
-static inline uint32_t CastPairAsUint32_t(std::pair<uint16_t, uint16_t> pair) {
-  uint32_t val = ((uint32_t) (pair.first << 16)) | ((uint32_t) pair.second);
-  return val;
-}
-
-static inline std::pair<uint16_t, uint16_t> CastUintAsPair(uint32_t val) {
-  std::pair<uint16_t, uint16_t> pair{};
-  pair.first = (uint16_t) (val >> 16);
-  pair.second = ((uint16_t) (val & 0x0000FFFF));
-  return pair;
-}
 
 static inline uint32_t CastUint32_t(uint16_t one, uint16_t two) {
   uint32_t dimensions = ((uint32_t) (one << 16)) | ((uint32_t) two);
@@ -69,23 +59,29 @@ int main(int agrc, char** argv) {
   SDL_Event event;
   bool quit = false;
   
+  gameInput_t inputgame = {
+    .pong = &pong,
+    .state = &state
+  };
+
+  pthread_t tid{};
+  int rc = pthread_create(&tid, NULL, computeState, (void *) &inputgame);
   while (!quit) {
-    if (SDL_PollEvent(&event)) {
-      ComputeState(pong);
-      app.prepareScene();
-      PlayerScore.UpdateScore(state.score.first, state.score.second);
-      ball.handleInput(state.ballPosition);
-      switch (event.type) {
-        case SDL_QUIT:
-          quit = true;
-          break;
-        default:
-          app.handleInput(event);
-          break;
-      }
-      app.presentScene();      
+    app.prepareScene();
+    PlayerScore.UpdateScore(state.score.first, state.score.second);
+    ball.handleInput(state.ballPosition);
+    SDL_PollEvent(&event);
+    switch (event.type) {
+      case SDL_QUIT:
+        quit = true;
+        break;
+      default:
+        app.handleInput(event);
+        break;
     }
-  }
+    app.draw();
+    app.presentScene(); 
+  } 
 
   SDL_Quit();
   return 0;

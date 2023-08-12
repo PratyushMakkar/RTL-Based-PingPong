@@ -23,13 +23,20 @@ target_include_directories(RTLPingPong PUBLIC
 target_sources(RTLPingPong PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/defs.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/gameState.cpp
+  ${CMAKE_CURRENT_SOURCE_DIR}/threadInterface/renderThreads.cpp
   "/opt/local/share/verilator/include/verilated.cpp"
   "/opt/local/share/verilator/include/verilated_vcd_c.cpp"
   "/opt/local/share/verilator/include/verilated_threads.cpp"
 )
 
+set(THREADS_PREFER_PTHREAD_FLAG ON)
+find_package(Threads REQUIRED)
+target_link_libraries(RTLPingPong PUBLIC Threads::Threads)
+
 target_include_directories(RTLPingPong PUBLIC
-  ${CMAKE_CURRENT_SOURCE_DIR})
+  ${CMAKE_CURRENT_SOURCE_DIR}
+  ${CMAKE_CURRENT_SOURCE_DIR}/threadInterface
+  )
 
 target_link_libraries(RTLPingPong PUBLIC
   ${SDL2_LIBRARIES}

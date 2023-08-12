@@ -38,12 +38,10 @@ Paddle::~Paddle() {}
 void Paddle::handleInput(const SDL_Event &event) {
   if (this->type == PADDLE_TYPE::LEFT) {
     position = state.leftPaddlePosition;
-    this->Draw();
     return;
   }
 
   if (event.type != SDL_KEYDOWN) {
-    this->Draw();
     return;
   }
 
@@ -59,7 +57,5 @@ void Paddle::handleInput(const SDL_Event &event) {
     default: break;
   }
   if (this->type == PADDLE_TYPE::RIGHT)  state.rightPaddlePosition = position;
- 
-  this->Draw();
 }
 

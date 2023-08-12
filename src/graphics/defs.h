@@ -29,6 +29,7 @@ class SDLApp {
     void InsertPaddle(Paddle* paddle);
     Paddle* GetPaddle(PADDLE_TYPE m_type);
     void handleInput(SDL_Event &e);
+    void draw();
     void prepareScene();
     void presentScene();
 };

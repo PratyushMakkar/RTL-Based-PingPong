@@ -1,4 +1,5 @@
 #include "defs.h"
+#include <iostream>
 
 SDLApp::SDLApp(SDL_Window* &window, SDL_Renderer* &render) {
   if (SDL_Init(SDL_INIT_VIDEO) < 0) {
@@ -51,5 +52,11 @@ Paddle* SDLApp::GetPaddle(PADDLE_TYPE m_type) {
 void SDLApp::handleInput(SDL_Event &e) {
   for (auto drawable: this->drawables) {
     drawable->handleInput(e);
+  }
+}
+
+void SDLApp::draw() {
+  for (auto drawable: this->drawables) {
+    drawable->Draw();
   }
 }

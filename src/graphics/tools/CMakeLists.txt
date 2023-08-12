@@ -11,7 +11,5 @@ target_sources(RTLPingPong PUBLIC
   ${CMAKE_CURRENT_SOURCE_DIR}/VPingPong___024root__DepSet_haf0ec2ba__0.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/VPingPong___024root__Slow.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/VPingPong__Syms.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/VPingPong__Trace__0__Slow.cpp
-  ${CMAKE_CURRENT_SOURCE_DIR}/VPingPong__Trace__0.cpp
   ${CMAKE_CURRENT_SOURCE_DIR}/VPingPong.cpp
 )

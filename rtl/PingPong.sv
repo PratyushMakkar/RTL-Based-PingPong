@@ -42,15 +42,19 @@ module PingPong (
   );
 
   always_ff @(posedge clk) begin
-    if (player_score_update_reg != 2'b00) begin
-      if (player_score_update_reg[1]) begin
-        player_score_reg[15:8] <= player_score_reg[15:8] + 8'h01;
-      end else begin
-        player_score_reg[7:0] <= player_score_reg[7:0] + 8'h01;
+    if (rst == 1'b0) player_score_reg <= 16'h0000;
+    else begin
+      if (player_score_update_reg != 2'b00) begin
+        if (player_score_update_reg[1]) begin
+          player_score_reg[15:8] <= player_score_reg[15:8] + 8'h01;
+        end else begin
+          player_score_reg[7:0] <= player_score_reg[7:0] + 8'h01;
+        end
       end
     end
   end
   
   assign scoreOut = player_score_reg;
+  assign rightPaddlePositionOut = rightPaddlePosition;
 
 endmodule

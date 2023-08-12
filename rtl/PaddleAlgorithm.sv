@@ -20,9 +20,9 @@ module PaddleAlgorithm (
     if (rst == 1'b0) begin
       paddlePositionOut <= {paddlePositionIn[31:16], paddle_base};
     end else if ((paddlePositionIn[15:0] + HALF_PADDLE_HEIGHT) < ballPosition[15:0]) begin
-      paddlePositionOut[15:0] <= paddlePositionIn[15:0] + 16'h0005;
+      paddlePositionOut[15:0] <= ((paddlePositionIn[15:0] + (HALF_PADDLE_HEIGHT <<1)) < dimensions[15:0]) ? (paddlePositionIn[15:0] + 16'h0005): paddlePositionIn[15:0] ;
     end else begin
-      paddlePositionOut[15:0] <= paddlePositionIn[15:0] + 16'hFFFB; 
+      paddlePositionOut[15:0] <= (paddlePositionIn[15:0] >= 16'h0005) ? (paddlePositionIn[15:0] + 16'hFFFB) : paddlePositionIn[15:0] ; 
     end
     paddlePositionOut[31:16] <= paddlePositionIn[31:16];
   end 

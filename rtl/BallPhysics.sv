@@ -14,45 +14,54 @@ module BallPhysics (
   localparam PADDLE_HEIGHT = 16'h0064;
   localparam INITIAL_BALL_VELOCITY = 15;
 
-  logic [31:0] ball_vel_reg;
+  logic [31:0] ball_vel_reg = {16'd5, 16'd5};
   logic [31:0] ball_pos_reg;
   logic [1:0] player_score_reg;
 
-  always_ff @(posedge clk) begin
+  logic flagDidScore = 0;
+  always_ff @(posedge clk) begin 
     if (rst == 1'b0) begin
-     	ball_vel_reg[31:16] <= INITIAL_BALL_VELOCITY;
-    	ball_vel_reg[15:0] <= INITIAL_BALL_VELOCITY;
+      ball_pos_reg[15:0] <= {1'b0, dimensions[15:1]}; 
+      ball_pos_reg[31:16] <= {1'b0, dimensions[31:17]}; 
 
-    	ball_pos_reg[31:16] <= {1'b0, dimensions[31:17]};
-    	ball_pos_reg[15:0] <= {1'b0, dimensions[15:1]};
-
-    	player_score_reg <= 2'b00;
-    end else if (ball_pos_reg[15:0] >= dimensions[15:0] ||  ball_pos_reg[15:0] <= 16'h001F) begin
-      ball_vel_reg[15:0] <= ~ball_vel_reg[15:0] + 16'h01;
+      ball_vel_reg <= {16'd5, 16'd5};
     end
+    else begin player_score_reg <= 2'b00;
+      ball_pos_reg <= ballPosition;
+      flagDidScore <= 1'b0;
 
-    if ((ballPosition[31:16] >= rightPaddlePosition[31:16])) begin   // Right paddle logic
-      if ((ballPosition[15:0] > rightPaddlePosition[15:0]) && (ballPosition[15:0] < rightPaddlePosition[15:0] + PADDLE_HEIGHT)) begin
-        ball_vel_reg[31:16] <= ~ball_vel_reg[31:16] + 16'h01;
-      end else begin
-        player_score_reg[0] <= 1'b1;
+      if (((ballPosition[15:0] + 16'h000F) >= dimensions[15:0]) ||  (ballPosition[15:0] <= 16'h000A)) begin
+        ball_vel_reg[15:0] <= ~ballVelocity[15:0] + 16'h01;
+      end
+
+      if ((ballPosition[31:16] < (leftPaddlePosition[31:16] + 16'h000D))) begin
+        if ((ballPosition[15:0] < leftPaddlePosition[15:0] + PADDLE_HEIGHT) && ((ballPosition[15:0] > leftPaddlePosition[15:0]))) begin
+          ball_vel_reg[31:16] <= ~ballVelocity[31:16] + 16'h01;
+        end else begin
+          player_score_reg <= 2'b01;
+          flagDidScore <= 1'b1;
+          ball_vel_reg <= {16'd5, 16'd5};
+        end
+      end 
+
+      if (((ballPosition[31:16]+ 16'h000D)  > rightPaddlePosition[31:16])) begin
+        if ((ballPosition[15:0] < (rightPaddlePosition[15:0] + PADDLE_HEIGHT)) && (ballPosition[15:0] > rightPaddlePosition[15:0])) begin
+        ball_vel_reg[31:16] <= ~ballVelocity[31:16] + 16'h01;
+        end else begin
+          player_score_reg <= 2'b10;
+          flagDidScore <= 1'b1;
+          ball_vel_reg <= {16'd5, 16'd5};
+        end
       end
     end
+  end
 
-    if ((ballPosition[31:16] <= leftPaddlePosition[31:16])) begin     // Left paddle logic
-      if ((ballPosition[15:0] > leftPaddlePosition[15:0]) && (ballPosition[15:0] < leftPaddlePosition[15:0] + PADDLE_HEIGHT)) begin
-        ball_vel_reg[31:16] <= ~ball_vel_reg[31:16] + 16'h01;
-      end else begin
-        player_score_reg[1] <= 1'b1;
-      end
-    end 
-
-    ball_pos_reg[31:16] <= ball_pos_reg[31:16] + ball_vel_reg[31:16];
-    ball_pos_reg[15:0] <= ball_pos_reg[15:0] + ball_vel_reg[15:0];
+  always_comb begin
+    ballPositionOut[15:0] = (flagDidScore == 1'b0) ? (ball_vel_reg[15:0] + ball_pos_reg[15:0]) : {1'b0, dimensions[15:1]};
+    ballPositionOut[31:16] = (flagDidScore == 1'b0) ? (ball_vel_reg[31:16] + ball_pos_reg[31:16]) : {1'b0, dimensions[31:17]};
   end
 
   assign playerDidScore = player_score_reg;
   assign ballVelocityOut = ball_vel_reg;
-  assign ballPositionOut = ball_pos_reg;
 endmodule
 

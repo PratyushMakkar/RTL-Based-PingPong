@@ -11,8 +11,8 @@ void Ball::Draw() {
   SDL_SetRenderDrawColor(render, 255, 255, 255, 255);
   this->paddle = SDL_Rect {
         .h = BALL_HEIGHT,
-        .y = position.first,
-        .x = position.second,
+        .y = position.second,
+        .x = position.first,
         .w = BALL_WIDTH,
   };
   if (SDL_RenderFillRect(render, &this->paddle) != 0) {
@@ -29,5 +29,10 @@ std::pair<int, int> Ball::getVelocity() {
 }
 
 void Ball::handleInput(const SDL_Event &e) {
+  this->Draw();
+}
+
+void Ball::handleInput(std::pair<uint16_t, uint16_t> pair) {
+  this->position = pair;
   this->Draw();
 }

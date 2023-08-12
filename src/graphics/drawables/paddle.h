@@ -6,8 +6,8 @@
 #define SCREEN_PADDING 10
 #define PADDLE_HEIGHT 100
 
-#include "drawable.h"
-#include "gameState.h"
+#include <drawable.h>
+#include <gameState.h>
 
 extern GameState_t state; 
 extern int _SCREEN_WIDTH;

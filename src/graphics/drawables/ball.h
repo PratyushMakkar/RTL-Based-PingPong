@@ -13,6 +13,7 @@ class Ball : public Drawable {
     std::pair<int, int> getVelocity();
     virtual void Draw() override;
     virtual void handleInput(const SDL_Event &e) override;
+    void handleInput(std::pair<uint16_t, uint16_t> pair);
   private:
     std::pair<int, int> velocity;
 };

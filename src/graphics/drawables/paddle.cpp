@@ -7,8 +7,8 @@ void Paddle::Draw() {
 
   this->paddle = SDL_Rect {
         .h = PADDLE_HEIGHT,
-        .y = position.first,
-        .x = position.second,
+        .y = position.second,
+        .x = position.first,
         .w = PADDLE_WIDTH,
   };
   
@@ -28,7 +28,7 @@ Paddle::Paddle(PADDLE_TYPE m_type, SDL_Renderer* render) {
       break;
 
     case (PADDLE_TYPE::RIGHT):
-      this->position = std::pair<int, int>{initialHeight, (_SCREEN_WIDTH-PADDLE_WIDTH)-SCREEN_PADDING};
+      this->position = std::pair<int, int>{(_SCREEN_WIDTH-PADDLE_WIDTH)-SCREEN_PADDING, initialHeight};
       break;
   }
 }
@@ -37,6 +37,7 @@ Paddle::~Paddle() {}
 
 void Paddle::handleInput(const SDL_Event &event) {
   if (this->type == PADDLE_TYPE::LEFT) {
+    position = state.leftPaddlePosition;
     this->Draw();
     return;
   }
@@ -48,16 +49,17 @@ void Paddle::handleInput(const SDL_Event &event) {
 
   switch (event.key.keysym.sym) {
     case SDLK_w:
-      if (position.first <= 0) break;
-      position.first = position.first - 5;
+      if (position.second <= 0) break;
+      position.second = position.second - 5;
       break;
     case SDLK_s:
-    if (position.first + PADDLE_HEIGHT > _SCREEN_HEIGHT) break;
-      position.first = position.first + 5;
+    if (position.second + PADDLE_HEIGHT > _SCREEN_HEIGHT) break;
+      position.second = position.second + 5;
       break;
     default: break;
   }
-  state.rightPaddlePosition = position;
+  if (this->type == PADDLE_TYPE::RIGHT)  state.rightPaddlePosition = position;
+ 
   this->Draw();
 }
 

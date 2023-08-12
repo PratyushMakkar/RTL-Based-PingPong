@@ -21,6 +21,13 @@ void PlayerScore::UpdateScore(PADDLE_TYPE type) {
   this->Draw();
 }
 
+void PlayerScore::UpdateScore(uint8_t scoreLeft, uint8_t scoreRight) {
+  _score.first = scoreLeft;
+  _score.second = scoreRight;
+  //After updating the score, render the new score 
+  this->Draw();
+}
+
 void PlayerScore::Draw() {
   std::string score1 = std::to_string(static_cast<int>(_score.first));
   std::string score2 = std::to_string(static_cast<int>(_score.second));

@@ -14,6 +14,7 @@ class PlayerScore : public Drawable {
   public:
     PlayerScore(SDL_Renderer* render);
     void UpdateScore(PADDLE_TYPE type);
+    void UpdateScore(uint8_t scoreLeft, uint8_t scoreRight);
     virtual void Draw() override;
     virtual void handleInput(const SDL_Event &e) override;
 

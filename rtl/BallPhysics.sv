@@ -17,7 +17,7 @@ module BallPhysics (
   logic [31:0] ball_vel_reg = {16'd5, 16'd5};
   logic [31:0] ball_pos_reg;
   logic [1:0] player_score_reg;
-
+  
   logic flagDidScore = 0;
   always_ff @(posedge clk) begin 
     if (rst == 1'b0) begin
@@ -40,7 +40,6 @@ module BallPhysics (
         end else begin
           player_score_reg <= 2'b01;
           flagDidScore <= 1'b1;
-          ball_vel_reg <= {16'd5, 16'd5};
         end
       end 
 
@@ -50,7 +49,6 @@ module BallPhysics (
         end else begin
           player_score_reg <= 2'b10;
           flagDidScore <= 1'b1;
-          ball_vel_reg <= {16'd5, 16'd5};
         end
       end
     end

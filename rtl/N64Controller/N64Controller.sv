@@ -10,6 +10,7 @@ module N64Controller (
   localparam ONE_US = 4;
   localparam THREE_US = 4;
   localparam HALF_CLOCK_COUNT = 100;
+  localparam FULL_CYCLE = 200;
   localparam MAX_FINISH_COUNT = 10;
   localparam logic [8:0] POLL_COMMAND = 9'b110000000;
 
@@ -22,6 +23,7 @@ module N64Controller (
   logic [33:0] dataBuffer = 0;
   logic [31:0] recieveCounter = 0;
   logic [5:0] recievePointer = 0;
+  logic zeroCounter;
   logic didFinishRecieve = 0;
 
   //--------------------------- Finish Interface Signals -----------------//
@@ -57,20 +59,23 @@ module N64Controller (
   end
 
   always_ff @(posedge clk) begin : RECIEVE_INTERFACE
-    recieveCounter <= 0;
-    recievePointer <= 0;
-    didFinishRecieve <= 0;
     if (nextState == RECIEVE) begin
-      if (recieveCounter == HALF_CLOCK_COUNT) begin
-        dataBuffer[recievePointer] = data;
+      if (recieveCounter == FULL_CYCLE) begin
         didFinishRecieve <= (recievePointer == 33) ? 1'b1 : 1'b0;
         recievePointer <= recievePointer + 1'b1;
         recieveCounter <= 0;
+        zeroCounter <= 0;
       end else begin
+        dataBuffer[recievePointer] <= (recieveCounter == (1.5 * HALF_CLOCK_COUNT)) ? ((zeroCounter >= HALF_CLOCK_COUNT) : 1'b0 : 1'b1) : 1'b0;
+        zeroCounter <= ((data == 1'b0) && (recieveCounter < HALF_CLOCK_COUNT)) : zeroCounter + 1'b1 : zeroCounter;
         recieveCounter <= recieveCounter + 1'b1;
         didFinishRecieve <= 1'b0;
       end
-    end  
+    end else begin
+      didFinishRecieve <= 1'b0;
+      recieveCounter <= 1'b0;
+      recievePointer <= 1'b0;
+    end
   end
 
   always_ff @(posedge clk) begin : FINISH_INTERFACE
@@ -123,7 +128,7 @@ module N64Controller (
   always_comb begin : TRANSMIT_DATA_REGISTER
     case (currentState)
       SEND0_ONE: transmitDataRegister <= 1'b0;
-      SEND0_TWO : transmitDataRegister <= 1'b0;
+      SEND1_TWO : transmitDataRegister <= 1'b0;
       default: transmitDataRegister <= 1'b1;
     endcase
   end

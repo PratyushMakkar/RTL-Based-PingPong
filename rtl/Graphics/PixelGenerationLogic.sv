@@ -23,10 +23,10 @@ module PixelGenerationLogic (
   assign {nextXSigned, nextXSigned}   = {nextX, nextY};
 
   always_comb begin
-    if (((nextXSigned - leftPaddleX) <= PADDLE_WIDTH) || ((nextXSigned - leftPaddleY) <= PADDLE_HEIGHT)) pixelOut <= COLOUR_WHITE;
-    else if (((nextXSigned - rightPaddleX) <= PADDLE_WIDTH) || ((nextXSigned - rightPaddleY) <= PADDLE_HEIGHT)) pixelOut <= COLOUR_WHITE;
-    else if (((nextXSigned - ballX) <= PADDLE_WIDTH) || ((nextXSigned - ballY) <= PADDLE_HEIGHT)) pixelOut <= COLOUR_WHITE;
-    else pixelOut <= COLOUR_BLACK;
+    if (((nextXSigned - leftPaddleX) <= PADDLE_WIDTH) || ((nextYSigned - leftPaddleY) <= PADDLE_HEIGHT)) pixelOut = COLOUR_WHITE;
+    else if (((nextXSigned - rightPaddleX) <= PADDLE_WIDTH) || ((nextYSigned - rightPaddleY) <= PADDLE_HEIGHT)) pixelOut = COLOUR_WHITE;
+    else if (((nextXSigned - ballX) <= PADDLE_WIDTH) || ((nextYSigned - ballY) <= PADDLE_HEIGHT)) pixelOut = COLOUR_WHITE;
+    else pixelOut = COLOUR_BLACK;
   end
 
 endmodule

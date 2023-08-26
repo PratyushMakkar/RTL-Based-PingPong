@@ -8,25 +8,30 @@ module PixelGenerationLogic (
 );
 
   localparam logic [7:0] COLOUR_WHITE = 8'hFF;
-  localparam logic [7:0] COLOUR_BLACK = 8'hFF;
+  localparam logic [7:0] COLOUR_BLACK = 8'h00;
 
-  parameter signed logic [15:0] PADDLE_HEIGHT = 16'h0064;
-  parameter signed logic [15:0] PADDLE_WIDTH = 16'h000F;
-  parameter signed logic [15:0] BALL_DIMENSION = 16'h000F;
+  parameter logic signed [15:0] PADDLE_HEIGHT = 16'h0064;
+  parameter logic signed [15:0] PADDLE_WIDTH = 16'h000F;
+  parameter logic signed [15:0] BALL_DIMENSION = 16'h000F;
   
-  signed logic [15:0] leftPaddleX, leftPaddleY, rightPaddleX, rightPaddleY, 
+  logic signed [15:0] leftPaddleX, leftPaddleY, rightPaddleX, rightPaddleY, 
     ballX, ballY, nextXSigned, nextYSigned;
 
   assign {leftPaddleX, leftPaddleY}   = leftPaddle;
   assign {rightPaddleX, rightPaddleY} = rightPaddle;
-  assign {ballX, ballY}               = pongBall
-  assign {nextXSigned, nextXSigned}   = {nextX, nextY};
+  assign {ballX, ballY}               = pongBall;
+  assign {nextXSigned, nextYSigned}   = {nextX, nextY};
 
   always_comb begin
-    if (((nextXSigned - leftPaddleX) <= PADDLE_WIDTH) || ((nextYSigned - leftPaddleY) <= PADDLE_HEIGHT)) pixelOut = COLOUR_WHITE;
-    else if (((nextXSigned - rightPaddleX) <= PADDLE_WIDTH) || ((nextYSigned - rightPaddleY) <= PADDLE_HEIGHT)) pixelOut = COLOUR_WHITE;
-    else if (((nextXSigned - ballX) <= PADDLE_WIDTH) || ((nextYSigned - ballY) <= PADDLE_HEIGHT)) pixelOut = COLOUR_WHITE;
-    else pixelOut = COLOUR_BLACK;
+    if (((nextXSigned - leftPaddleX) <= PADDLE_WIDTH) || ((nextYSigned - leftPaddleY) <= PADDLE_HEIGHT)) begin
+      pixelOut = COLOUR_WHITE;
+    end else if (((nextXSigned - rightPaddleX) <= PADDLE_WIDTH) || ((nextYSigned - rightPaddleY) <= PADDLE_HEIGHT)) begin
+      pixelOut = COLOUR_WHITE;
+    end else if (((nextXSigned - ballX) <= PADDLE_WIDTH) || ((nextYSigned - ballY) <= PADDLE_HEIGHT)) begin
+      pixelOut = COLOUR_WHITE;
+    end else begin
+      pixelOut = COLOUR_BLACK;
+    end
   end
 
 endmodule

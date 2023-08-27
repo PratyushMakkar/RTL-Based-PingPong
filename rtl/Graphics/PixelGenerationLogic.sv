@@ -4,11 +4,11 @@ module PixelGenerationLogic (
   input logic [31:0] pongBall,
   input logic [15:0] nextX,
   input logic [15:0] nextY,
-  output logic [7:0] pixelOut
+  output logic [23:0] pixelOut
 );
 
-  localparam logic [7:0] COLOUR_WHITE = 8'hFF;
-  localparam logic [7:0] COLOUR_BLACK = 8'h00;
+  localparam logic [23:0] COLOUR_WHITE = 8'hFFFFFF;
+  localparam logic [23:0] COLOUR_BLACK = 8'h000000;
 
   parameter logic signed [15:0] PADDLE_HEIGHT = 16'h0064;
   parameter logic signed [15:0] PADDLE_WIDTH = 16'h000F;

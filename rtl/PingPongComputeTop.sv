@@ -9,10 +9,10 @@ module PingPongComputeTop (
   output logic [31:0] rightPaddlePosition
 );
 
-  parameter logic [31:0] DEFAULT_BALL_POSITION = {};
-  parameter logic [31:0] DEFAULT_LEFT_PADDLE_POSITION = {};
-  parameter logic [31:0] DEFAULT_RIGHT_PADDLE_POSITION = {};
-  parameter logic [31:0] DEFAULT_BALL_VELOCITY = {};
+  parameter logic [31:0] DEFAULT_BALL_POSITION = {16'h0140, 16'h00F0};
+  parameter logic [31:0] DEFAULT_LEFT_PADDLE_POSITION = {16'h0005, 16'h00E0};
+  parameter logic [31:0] DEFAULT_RIGHT_PADDLE_POSITION = {16'h0140 + (~16'h0005 + 1'b1), 16'h00E0};
+  parameter logic [31:0] DEFAULT_BALL_VELOCITY = {16'h0005, ~16'h0005 + 1'b1};
   parameter logic [31:0] PING_PONG_DIMENSIONS = {16'h0005, 16'h0005};
 
   parameter BASE_ADDRESS = 0;

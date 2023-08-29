@@ -30,12 +30,12 @@ module UserControllerTop (
   user_controller_state_t currentState = IDLE, nextState;
 
   function logic [15:0] setPaddleHeight(logic [33:0] command);
-    logic signed [15:0] paddleHeight = leftPaddleControllerReg[15:0];
-    if (set[5] == 1'b1) begin
+    automatic logic signed [15:0] paddleHeight = leftPaddleControllerReg[15:0];
+    if (command[5] == 1'b1) begin
       if (paddleHeight >= PADDLE_INCREMENT) begin
         paddleHeight = paddleHeight - PADDLE_INCREMENT;
       end
-    end else if (set[4] == 1'b1) begin
+    end else if (command[4] == 1'b1) begin
       if (paddleHeight <= (SCREEN_HEIGHT - PADDLE_HEIGHT)) begin
         paddleHeight = paddleHeight + PADDLE_INCREMENT;
       end
@@ -79,7 +79,7 @@ module UserControllerTop (
         setGnt = readValid;
       end
       CONTROLLER_SET: begin
-        nextState = (cnt == MAX_CONTROLLER_SET_CNT) ? WRITE_CONTROLLER ? CONTROLLER_SET;
+        nextState = (cnt == MAX_CONTROLLER_SET_CNT) ? WRITE_CONTROLLER : CONTROLLER_SET;
         setGnt = 1'b0;
       end
       WRITE_CONTROLLER: begin
@@ -89,7 +89,7 @@ module UserControllerTop (
     endcase
   end
 
-  always_comb begin : NEXT_STATE_LOGIC
+  always_comb begin : OUTPUT_CONTROL
     wrData = leftPaddleController;
     wrEnable = (currentState == WRITE_CONTROLLER) ? 1'b1 : 1'b0;
     wrAddr = BASE_ADDRESS;

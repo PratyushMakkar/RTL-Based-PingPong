@@ -1,3 +1,4 @@
+`include "PingPong.sv"
 module PingPongComputeTop (
   input logic clk,
   input logic en,
@@ -31,7 +32,7 @@ module PingPongComputeTop (
       rightPaddlePositionIn <= DEFAULT_RIGHT_PADDLE_POSITION;
     end else begin
       if (en == 1'b1) begin
-        ballVelocityIn <= ballPositionOut;
+        ballVelocityIn <= ballVelocityOut;
         ballPositionIn <= ballPositionOut;
         leftPaddlePositionIn <= leftPaddlePositionOut;
       end
@@ -51,7 +52,7 @@ module PingPongComputeTop (
     .leftPaddlePositionOut(leftPaddlePositionOut),
     .rightPaddlePositionOut(rightPaddlePositionOut),
     .ballPositionOut(ballPositionOut),
-    .ballVelocityOut(ballPositionOut)
+    .ballVelocityOut(ballVelocityOut)
   );
 
   assign addr = BASE_ADDRESS;

@@ -1,4 +1,6 @@
 `include "VGAGraphics.sv"
+`include "PixelGenerationLogic.sv"
+
 module VideoController (
   input logic clk,
   input logic rst,
@@ -7,7 +9,7 @@ module VideoController (
   input logic [31:0] rightPaddlePosition,
   output logic en,           //Enable Ping Pong Compute
   output logic hsync,
-  output logic vscync,
+  output logic vsync,
   output logic [7:0] red,
   output logic [7:0] green,
   output logic [7:0] blue,
@@ -26,12 +28,12 @@ module VideoController (
      leftPaddlePositionReg = leftPaddlePosition, 
      rightPaddlePositionReg = rightPaddlePosition;
 
-  enum logic [1:0] state {INITIAL, SET_REGISTER, DISPLAY} currentState = INITIAL, nextState;
+  enum logic [1:0] {INITIAL, SET_REGISTER, DISPLAY} currentState = INITIAL, nextState;
 
   always_ff @(posedge clk) begin
-    nextState <= currentState;
+   currentState <=  nextState;
     if (currentState == SET_REGISTER) begin
-        leftPaddlePositionReg <= leftPaddleController;
+        leftPaddlePositionReg <= leftPaddlePosition;
         rightPaddlePositionReg <= rightPaddlePosition;
         ballPositionReg <= ballPosition;
     end
@@ -64,7 +66,7 @@ module VideoController (
     .vsyncReg(currVsync),
     .hsync(hsync),
     .vsync(vsync),
-    .red(read),
+    .red(red),
     .green(green),
     .blue(blue),
     .sync(sync),

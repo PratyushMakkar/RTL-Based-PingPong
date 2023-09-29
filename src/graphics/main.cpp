@@ -59,17 +59,22 @@ int main(int agrc, char** argv) {
   SDL_Event event;
   bool quit = false;
   
+  pthread_mutex_t mut{};
+  pthread_mutex_init(&mut, 0);
   gameInput_t inputgame = {
     .pong = &pong,
-    .state = &state
+    .state = &state,
+    .mut = mut
   };
 
   pthread_t tid{};
   int rc = pthread_create(&tid, NULL, computeState, (void *) &inputgame);
   while (!quit) {
     app.prepareScene();
+    pthread_mutex_lock(&mut);
     PlayerScore.UpdateScore(state.score.first, state.score.second);
     ball.handleInput(state.ballPosition);
+    pthread_mutex_unlock(&mut);
     SDL_PollEvent(&event);
     switch (event.type) {
       case SDL_QUIT:
@@ -79,6 +84,7 @@ int main(int agrc, char** argv) {
         app.handleInput(event);
         break;
     }
+
     app.draw();
     app.presentScene(); 
   } 

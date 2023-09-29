@@ -20,7 +20,10 @@ void *computeState(void* param){
     gameInput_t* input = (gameInput_t*) param;
     VPingPong *pong = input->pong;
     GameState_t *state = input->state;
+    pthread_mutex_t mut = input->mut;
     msleep(50);
+
+    pthread_mutex_lock(&mut);
     pong->rst = 1;
     
     pong->dimensions = CastPairAsUint32_t(state->dimensions);
@@ -41,6 +44,6 @@ void *computeState(void* param){
     state->leftPaddlePosition =  CastUintAsPair(pong->leftPaddlePositionOut);
     state->rightPaddlePosition =  CastUintAsPair(pong->rightPaddlePositionOut);
     state->score = std::pair<uint8_t, uint8_t>{(pong->scoreOut >>8), pong->scoreOut & 0x00FF};
-    
+    pthread_mutex_unlock(&mut);
   }
 }

@@ -10,6 +10,7 @@
 typedef struct {
   GameState_t* state;
   VPingPong* pong;
+  pthread_mutex_t mut;
 } gameInput_t;
 
 void *computeState(void* param);
